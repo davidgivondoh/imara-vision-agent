@@ -3,7 +3,7 @@ name: Build & Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
@@ -35,18 +35,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate ICO icon (Windows only)
-        if: matrix.platform == 'win'
-        run: |
-          node -e "
-            import pngToIco from 'png-to-ico';
-            import { readFileSync, writeFileSync } from 'fs';
-            const png = readFileSync('assets/icons/icon.png');
-            const ico = await pngToIco(png);
-            writeFileSync('assets/icons/icon.ico', ico);
-            console.log('Created icon.ico');
-          "
-
       - name: Build
         run: npm run build
 
@@ -73,8 +61,6 @@ jobs:
             release/*.AppImage
             release/*.deb
             release/*.rpm
-            release/*.yml
-            release/*.yaml
           if-no-files-found: warn
 
   publish:
@@ -89,10 +75,12 @@ jobs:
           merge-multiple: true
 
       - name: List artifacts
-        run: find artifacts -type f | head -30
+        run: find artifacts -type f 2>/dev/null | head -30 || echo "No artifacts found"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: false
           generate_release_notes: true
@@ -103,5 +91,3 @@ jobs:
             artifacts/**/*.AppImage
             artifacts/**/*.deb
             artifacts/**/*.rpm
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -87,6 +87,6 @@ linux:
 # ── Publish (GitHub Releases) ────────────────────────────────
 publish:
   provider: github
-  owner: imaravision
+  owner: davidgivondoh
   repo: imara-vision-agent
   releaseType: release
