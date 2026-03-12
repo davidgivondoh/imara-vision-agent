@@ -2,35 +2,10 @@ stages:
   - build
   - publish
 
-variables:
-  NODE_VERSION: "20"
-
-# ── macOS Build ──────────────────────────────────────────────
-build-mac:
-  stage: build
-  tags:
-    - saas-macos-medium-m1
-  image: macos-14-xcode-15
-  before_script:
-    - brew install node@20
-    - export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
-    - node --version
-    - npm ci
-  script:
-    - npm run build
-    - npx electron-builder --mac --publish never
-  artifacts:
-    paths:
-      - release/*.dmg
-      - release/*.zip
-    expire_in: 7 days
-
 # ── Linux Build ──────────────────────────────────────────────
 build-linux:
   stage: build
-  tags:
-    - saas-linux-medium-amd64
-  image: node:20
+  image: electronuserland/builder:20
   script:
     - npm ci
     - npm run build
@@ -39,28 +14,26 @@ build-linux:
     paths:
       - release/*.AppImage
       - release/*.deb
-    expire_in: 7 days
+      - release/*.rpm
+    expire_in: 30 days
 
 # ── Publish to GitHub Release ────────────────────────────────
 publish:
   stage: publish
-  tags:
-    - saas-linux-medium-amd64
   image: node:20
   needs:
-    - build-mac
     - build-linux
   before_script:
-    - apt-get update && apt-get install -y gh
+    - apt-get update -qq && apt-get install -y -qq gh > /dev/null
   script:
     - |
       echo "Uploading artifacts to GitHub Release..."
-      for file in release/*.dmg release/*.zip release/*.AppImage release/*.deb; do
+      for file in release/*.AppImage release/*.deb release/*.rpm; do
         if [ -f "$file" ]; then
           echo "Uploading $file"
-          gh release upload v${CI_COMMIT_TAG#v} "$file" \
+          gh release upload "${CI_COMMIT_TAG}" "$file" \
             --repo davidgivondoh/imara-vision-agent \
-            --clobber || echo "Failed to upload $file"
+            --clobber || echo "Warning: failed to upload $file"
         fi
       done
   rules:
