@@ -1,0 +1,23 @@
+workflows:
+  build-macos:
+    name: Build macOS Installer
+    instance_type: mac_mini_m1
+    max_build_duration: 30
+    environment:
+      node: 20
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: v*
+          include: true
+    scripts:
+      - name: Install dependencies
+        script: npm ci
+      - name: Build TypeScript
+        script: npm run build
+      - name: Build macOS installer
+        script: npx electron-builder --mac --publish never
+    artifacts:
+      - release/*.dmg
+      - release/*.zip
