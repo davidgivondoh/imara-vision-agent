@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Imara Vision Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <svg width="22" height="22" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="20" stroke="#4F46E5" stroke-width="2.5"/>
+          <circle cx="24" cy="24" r="7" fill="#4F46E5"/>
+        </svg>
+        <span class="sidebar-brand-name">Imara Vision</span>
+      </div>
+
+      <button class="new-chat-btn" id="new-chat-btn" aria-label="Start new conversation">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New conversation
+      </button>
+
+      <div class="conversation-list" id="conversation-list"></div>
+
+      <div class="sidebar-footer">
+        <button class="sidebar-footer-btn" id="settings-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Settings
+        </button>
+        <div class="sidebar-status">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-label">connecting</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar open (collapsed state) -->
+    <button class="sidebar-open-btn" id="sidebar-open" style="display:none" aria-label="Open sidebar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
+    <!-- Main -->
+    <main class="chat-main">
+
+      <!-- Top bar -->
+      <div class="topbar">
+        <button class="topbar-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        </button>
+        <span class="topbar-title" id="topbar-title">New conversation</span>
+        <div class="topbar-right">
+          <button class="topbar-btn" id="voice-btn-topbar" title="Voice input">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Welcome -->
+      <div class="welcome" id="welcome">
+        <div class="welcome-hero">
+          <div class="welcome-icon">
+            <svg width="40" height="40" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="20" stroke="url(#wg)" stroke-width="2.5"/>
+              <circle cx="24" cy="24" r="7" fill="url(#wg)"/>
+              <defs><linearGradient id="wg" x1="4" y1="4" x2="44" y2="44"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#4f46e5"/></linearGradient></defs>
+            </svg>
+          </div>
+          <span class="welcome-greeting" id="welcome-greeting">Good morning</span>
+          <h1>I'm here for you</h1>
+          <p>Your assistant for learning, living, and getting things done.</p>
+        </div>
+
+        <div class="welcome-voice-cta">
+          <button class="voice-hero-btn" id="voice-btn-hero" aria-label="Tap to speak">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+          <span class="voice-hero-label">Tap to speak</span>
+        </div>
+
+      </div>
+
+      <!-- Messages -->
+      <div class="messages" id="messages" role="log" aria-live="polite" aria-label="Conversation messages"></div>
+
+      <!-- Voice overlay -->
+      <div class="voice-overlay" id="voice-overlay" style="display:none">
+        <div class="voice-overlay-inner">
+          <div class="voice-anim">
+            <div class="voice-ring r1"></div>
+            <div class="voice-ring r2"></div>
+            <div class="voice-ring r3"></div>
+            <button class="voice-active-btn" id="voice-stop-btn">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+          </div>
+          <p class="voice-live-text" id="voice-transcript">Listening...</p>
+          <button class="voice-cancel" id="voice-cancel-btn">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="input-wrap">
+        <div class="input-box">
+          <!-- Attached files preview -->
+          <div class="input-attachments" id="input-attachments" style="display:none"></div>
+
+          <div class="input-row">
+            <div class="input-toolbar">
+              <button class="toolbar-btn" id="attach-btn" title="Attach file" aria-label="Attach a file">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+              </button>
+            </div>
+
+            <textarea id="chat-input" placeholder="Ask me anything..." rows="1" aria-label="Type your message"></textarea>
+
+            <div class="input-btns">
+              <button class="mic-btn" id="voice-btn-inline" title="Voice input" aria-label="Speak your message">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              </button>
+              <button class="send-btn" id="send-btn" disabled aria-label="Send message">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Hidden file inputs -->
+        <input type="file" id="file-input" hidden multiple accept=".pdf,.doc,.docx,.txt,.csv,.xls,.xlsx,.ppt,.pptx,image/*" />
+        <input type="file" id="image-input" hidden multiple accept="image/*" />
+        <input type="file" id="camera-input" hidden accept="image/*" capture="environment" />
+        <p class="input-disclaimer">Your assistant for inclusive learning &amp; independent living.</p>
+      </div>
+    </main>
+
+    <!-- Settings -->
+    <div class="modal-backdrop" id="settings-modal" style="display:none">
+      <div class="modal-panel">
+        <div class="modal-top">
+          <h2>Settings</h2>
+          <button class="modal-x" id="settings-close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-content">
+
+          <section class="s-group">
+            <div class="s-status-banner" id="settings-info">
+              <div class="s-status-dot-wrap">
+                <span class="s-status-dot" id="settings-status-dot"></span>
+              </div>
+              <div class="s-status-summary">
+                <span class="s-status-headline" id="status-health">Checking...</span>
+                <span class="s-status-sub" id="status-summary-line">--</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="s-group">
+            <h3>Display</h3>
+            <div class="s-row">
+              <span>Font size</span>
+              <select id="a11y-fontsize" class="s-select">
+                <option value="14">Default</option>
+                <option value="16">Large</option>
+                <option value="18">Extra large</option>
+                <option value="20">Maximum</option>
+              </select>
+            </div>
+            <div class="s-row">
+              <span>Line spacing</span>
+              <select id="a11y-linespacing" class="s-select">
+                <option value="1.6">Default</option>
+                <option value="1.8">Comfortable</option>
+                <option value="2.0">Spacious</option>
+              </select>
+            </div>
+            <div class="s-row">
+              <span>High contrast</span>
+              <label class="toggle"><input type="checkbox" id="a11y-contrast" /><span class="toggle-track"></span></label>
+            </div>
+            <div class="s-row">
+              <span>Dyslexia-friendly font</span>
+              <label class="toggle"><input type="checkbox" id="a11y-dyslexia" /><span class="toggle-track"></span></label>
+            </div>
+            <div class="s-row">
+              <span>Reduce motion</span>
+              <label class="toggle"><input type="checkbox" id="a11y-motion" /><span class="toggle-track"></span></label>
+            </div>
+            <div class="s-row">
+              <span>Enhanced focus indicators</span>
+              <label class="toggle"><input type="checkbox" id="a11y-focus" /><span class="toggle-track"></span></label>
+            </div>
+          </section>
+
+          <section class="s-group">
+            <h3>Voice &amp; Speech</h3>
+            <div class="s-row">
+              <span>Read responses aloud</span>
+              <label class="toggle"><input type="checkbox" id="tts-toggle" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="s-row">
+              <span>Speed</span>
+              <select id="tts-rate" class="s-select">
+                <option value="0.6">Very slow</option>
+                <option value="0.8">Slow</option>
+                <option value="1" selected>Normal</option>
+                <option value="1.2">Fast</option>
+              </select>
+            </div>
+            <div class="s-row">
+              <span>Voice</span>
+              <select id="tts-voice" class="s-select">
+                <option value="">System default</option>
+              </select>
+            </div>
+            <div class="s-row">
+              <span>Input language</span>
+              <select id="voice-lang" class="s-select">
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="en-ZA">English (South Africa)</option>
+                <option value="fr-FR">French</option>
+                <option value="es-ES">Spanish</option>
+                <option value="sw-KE">Swahili</option>
+              </select>
+            </div>
+            <div class="s-row">
+              <span>Auto-submit voice input</span>
+              <label class="toggle"><input type="checkbox" id="voice-autosubmit" checked /><span class="toggle-track"></span></label>
+            </div>
+          </section>
+
+          <section class="s-group">
+            <h3>Behaviour</h3>
+            <div class="s-row">
+              <span>Confirm before actions</span>
+              <label class="toggle"><input type="checkbox" id="confirm-actions" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="s-row">
+              <span>Simplify responses</span>
+              <label class="toggle"><input type="checkbox" id="simple-responses" /><span class="toggle-track"></span></label>
+            </div>
+            <div class="s-row">
+              <div class="s-row-info">
+                <span>Independence level</span>
+                <span class="s-hint">How much the agent does on its own</span>
+              </div>
+              <select id="cfg-autonomy" class="s-select">
+                <option value="L0">Off &mdash; I do everything</option>
+                <option value="L1" selected>Suggest &mdash; recommend actions</option>
+                <option value="L2">Assist &mdash; act with my approval</option>
+                <option value="L3">Auto &mdash; act, tell me after</option>
+              </select>
+            </div>
+            <div class="s-row">
+              <div class="s-row-info">
+                <span>Ask before permanent actions</span>
+                <span class="s-hint">Get confirmation before anything that can't be undone</span>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cfg-confirm-irreversible" checked /><span class="toggle-track"></span></label>
+            </div>
+          </section>
+
+          <section class="s-group">
+            <h3>Privacy</h3>
+            <div class="s-row">
+              <div class="s-row-info">
+                <span>Process on this device</span>
+                <span class="s-hint">Keep data local instead of sending to the cloud</span>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cfg-local-inference" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="s-row">
+              <div class="s-row-info">
+                <span>Detect personal information</span>
+                <span class="s-hint">Automatically find and protect sensitive data</span>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cfg-pii-detection" checked /><span class="toggle-track"></span></label>
+            </div>
+            <div class="s-row">
+              <div class="s-row-info">
+                <span>Help improve Imara</span>
+                <span class="s-hint">Share anonymous usage data</span>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cfg-telemetry" checked /><span class="toggle-track"></span></label>
+            </div>
+          </section>
+
+          <section class="s-group">
+            <h3>Memory</h3>
+            <div class="s-row">
+              <span>Stored entries</span>
+              <span class="s-val" id="settings-memory-count">--</span>
+            </div>
+            <div class="s-actions">
+              <button class="s-btn" id="export-memory-btn">Export</button>
+              <button class="s-btn danger" id="clear-memory-btn">Clear all</button>
+            </div>
+          </section>
+
+          <section class="s-group">
+            <h3>What Imara can do</h3>
+            <p class="s-group-desc">Turn capabilities on or off depending on what help you need.</p>
+
+            <div class="s-capability">
+              <div class="s-cap-info">
+                <svg class="s-cap-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-500)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <div>
+                  <span class="s-cap-name">Search the web</span>
+                  <span class="s-cap-desc">Look things up online to answer your questions</span>
+                </div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cap-web" checked /><span class="toggle-track"></span></label>
+            </div>
+
+            <div class="s-capability">
+              <div class="s-cap-info">
+                <svg class="s-cap-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-600)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                <div>
+                  <span class="s-cap-name">Use my computer</span>
+                  <span class="s-cap-desc">Open apps, click, type, and take screenshots for you</span>
+                </div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cap-desktop" checked /><span class="toggle-track"></span></label>
+            </div>
+
+            <div class="s-capability">
+              <div class="s-cap-info">
+                <svg class="s-cap-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-600)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <div>
+                  <span class="s-cap-name">Read and write files</span>
+                  <span class="s-cap-desc">Access documents, notes, and files on your device</span>
+                </div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cap-files" checked /><span class="toggle-track"></span></label>
+            </div>
+
+            <div class="s-capability">
+              <div class="s-cap-info">
+                <svg class="s-cap-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple-600)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <div>
+                  <span class="s-cap-name">Run code and commands</span>
+                  <span class="s-cap-desc">Execute scripts and system commands when needed</span>
+                </div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cap-code" checked /><span class="toggle-track"></span></label>
+            </div>
+
+            <div class="s-capability">
+              <div class="s-cap-info">
+                <svg class="s-cap-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                <div>
+                  <span class="s-cap-name">Check accessibility</span>
+                  <span class="s-cap-desc">Audit web pages for readability and usability</span>
+                </div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cap-vision" checked /><span class="toggle-track"></span></label>
+            </div>
+
+            <div class="s-capability">
+              <div class="s-cap-info">
+                <svg class="s-cap-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-600)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <div>
+                  <span class="s-cap-name">Summarise notes</span>
+                  <span class="s-cap-desc">Condense long notes into key points</span>
+                </div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cap-summariser" checked /><span class="toggle-track"></span></label>
+            </div>
+
+            <div class="s-capability">
+              <div class="s-cap-info">
+                <svg class="s-cap-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple-600)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <div>
+                  <span class="s-cap-name">Plan my revision</span>
+                  <span class="s-cap-desc">Create study schedules and practice quizzes</span>
+                </div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cap-revision" checked /><span class="toggle-track"></span></label>
+            </div>
+
+            <div class="s-capability">
+              <div class="s-cap-info">
+                <svg class="s-cap-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                <div>
+                  <span class="s-cap-name">Accessibility support</span>
+                  <span class="s-cap-desc">Extra help for reading, navigation, and learning</span>
+                </div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="cap-a11y" checked /><span class="toggle-track"></span></label>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

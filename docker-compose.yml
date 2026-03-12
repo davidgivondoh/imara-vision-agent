@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  neura-engine:
+    build: .
+    container_name: neura-engine
+    ports:
+      - "4100:4100"
+    environment:
+      - NODE_ENV=production
+      - NEURA_ENGINE_PORT=4100
+      - NEURA_ENGINE_HOST=0.0.0.0
+      - NEURA_LOG_LEVEL=info
+      - NEURA_PREFER_LOCAL=true
+      - NEURA_CLOUD_API_KEY=${NEURA_CLOUD_API_KEY:-}
+      - NEURA_CLOUD_MODEL=${NEURA_CLOUD_MODEL:-claude-sonnet-4-6}
+      - NEURA_OLLAMA_ENDPOINT=${NEURA_OLLAMA_ENDPOINT:-http://host.docker.internal:11434}
+      - NEURA_MAX_CONCURRENT_TASKS=${NEURA_MAX_CONCURRENT_TASKS:-3}
+      - NEURA_AUTONOMY_LEVEL=${NEURA_AUTONOMY_LEVEL:-L1}
+      - NEURA_TELEMETRY=${NEURA_TELEMETRY:-true}
+      - NEURA_A11Y_AUTO_ADAPT=${NEURA_A11Y_AUTO_ADAPT:-true}
+    volumes:
+      - neura-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4100/api/agent/live').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  neura-data:

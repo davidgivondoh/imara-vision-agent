@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "paths": {
+      "@core/*": ["./src/core/*"],
+      "@inference/*": ["./src/inference/*"],
+      "@plugins/*": ["./src/plugins/*"],
+      "@engine/*": ["./src/engine/*"],
+      "@desktop/*": ["./src/desktop/*"],
+      "@products/*": ["./src/products/*"],
+      "@shared/*": ["./src/shared/*"]
+    },
+    "baseUrl": "."
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests"]
+}
