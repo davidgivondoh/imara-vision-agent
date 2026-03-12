@@ -2,9 +2,14 @@
 // Wraps the Express UI server in a native desktop window with system tray.
 
 import { app, BrowserWindow, Tray, Menu, nativeImage, shell } from 'electron'
-import { join, resolve } from 'path'
+import { join, dirname } from 'path'
 import { existsSync } from 'fs'
+import { fileURLToPath } from 'url'
 import { fork, type ChildProcess } from 'child_process'
+
+// ── ESM compatibility ────────────────────────────────────────────────
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 // ── Constants ────────────────────────────────────────────────────────
 const APP_NAME = 'Imara Vision Agent'
