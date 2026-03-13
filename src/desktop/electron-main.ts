@@ -2,21 +2,18 @@
 // Wraps the Express UI server in a native desktop window with system tray.
 
 import { app, BrowserWindow, Tray, Menu, nativeImage, shell } from 'electron'
-import { join, dirname } from 'path'
+import { join } from 'path'
 import { existsSync } from 'fs'
-import { fileURLToPath } from 'url'
 import { fork, type ChildProcess } from 'child_process'
-
-// ── ESM compatibility ────────────────────────────────────────────────
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 
 // ── Constants ────────────────────────────────────────────────────────
 const APP_NAME = 'Imara Vision Agent'
 const UI_PORT = 3210
 const UI_URL = `http://127.0.0.1:${UI_PORT}`
 const IS_DEV = !app.isPackaged
-const ICON_DIR = join(__dirname, '..', '..', 'assets', 'icons')
+// app.getAppPath() reliably returns the app root in both dev and packaged modes
+const APP_ROOT = app.getAppPath()
+const ICON_DIR = join(APP_ROOT, 'assets', 'icons')
 
 // ── State ────────────────────────────────────────────────────────────
 let mainWindow: BrowserWindow | null = null
@@ -41,13 +38,13 @@ app.on('second-instance', () => {
 function startServer(): Promise<void> {
   return new Promise((resolve, reject) => {
     const serverScript = IS_DEV
-      ? join(__dirname, '..', '..', 'src', 'desktop', 'ui-server.ts')
-      : join(__dirname, 'ui-server.js')
+      ? join(APP_ROOT, 'src', 'desktop', 'ui-server.ts')
+      : join(APP_ROOT, 'dist', 'desktop', 'ui-server.js')
 
     const execArgv = IS_DEV ? ['--import', 'tsx'] : []
 
     serverProcess = fork(serverScript, [], {
-      cwd: join(__dirname, '..', '..'),
+      cwd: APP_ROOT,
       execArgv,
       stdio: 'pipe',
       env: { ...process.env, NODE_ENV: IS_DEV ? 'development' : 'production' },

@@ -17,6 +17,26 @@ files:
   - "!tests/**"
   - "!docs/**"
   - "!.git/**"
+  - "!node_modules/typescript/**"
+  - "!node_modules/vite/**"
+  - "!node_modules/vitest/**"
+  - "!node_modules/@types/**"
+  - "!node_modules/electron-builder/**"
+  - "!node_modules/electron-winstaller/**"
+  - "!node_modules/app-builder-bin/**"
+  - "!node_modules/7zip-bin/**"
+  - "!node_modules/@esbuild/**"
+  - "!node_modules/node-gyp/**"
+  - "!node_modules/postject/**"
+  - "!node_modules/@rollup/**"
+  - "!node_modules/rollup/**"
+  - "!node_modules/@vitest/**"
+  - "!node_modules/png-to-ico/**"
+  - "!node_modules/electron-publish/**"
+  - "!**/*.md"
+  - "!**/CHANGELOG*"
+  - "!**/LICENSE"
+  - "!**/README*"
 
 # Include native modules
 asar: true
@@ -32,6 +52,8 @@ win:
   target:
     - target: nsis
       arch: [x64, arm64]
+    - target: appx
+      arch: [x64, arm64]
   icon: assets/icons/icon.ico
   artifactName: "${productName}-${version}-${os}-${arch}.${ext}"
 
@@ -44,6 +66,16 @@ nsis:
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: Imara Vision Agent
+
+appx:
+  identityName: PrecifarmAI.ImaraVisionAgent
+  publisher: CN=Precifarm AI Ltd
+  publisherDisplayName: Imara Vision
+  applicationId: ImaraVisionAgent
+  displayName: Imara Vision Agent
+  languages: [en-US]
+  backgroundColor: "#4f46e5"
+  showNameOnTiles: true
 
 # ── macOS ────────────────────────────────────────────────────
 mac:

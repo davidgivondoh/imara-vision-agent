@@ -6,29 +6,49 @@ stages:
 build-linux:
   stage: build
   image: electronuserland/builder:20
+  tags:
+    - saas-linux-medium-amd64
   script:
     - npm ci
     - npm run build
-    - npx electron-builder --linux --publish never
+    - npx electron-builder --linux AppImage deb --x64 --publish never
   artifacts:
     paths:
       - release/*.AppImage
       - release/*.deb
-      - release/*.rpm
+    expire_in: 30 days
+
+# ── macOS Build (cross-compile from Linux) ───────────────────
+build-mac:
+  stage: build
+  image: electronuserland/builder:wine
+  tags:
+    - saas-linux-medium-amd64
+  script:
+    - npm ci
+    - npm run build
+    - npx electron-builder --mac zip --x64 --publish never
+    - npx electron-builder --mac zip --arm64 --publish never
+  artifacts:
+    paths:
+      - release/*-mac-*.zip
     expire_in: 30 days
 
 # ── Publish to GitHub Release ────────────────────────────────
 publish:
   stage: publish
   image: node:20
+  tags:
+    - saas-linux-medium-amd64
   needs:
     - build-linux
+    - build-mac
   before_script:
     - apt-get update -qq && apt-get install -y -qq gh > /dev/null
   script:
     - |
       echo "Uploading artifacts to GitHub Release..."
-      for file in release/*.AppImage release/*.deb release/*.rpm; do
+      for file in release/*.AppImage release/*.deb release/*-mac-*.zip; do
         if [ -f "$file" ]; then
           echo "Uploading $file"
           gh release upload "${CI_COMMIT_TAG}" "$file" \
